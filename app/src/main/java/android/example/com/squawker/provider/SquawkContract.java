@@ -17,39 +17,36 @@ package android.example.com.squawker.provider;
 
 import android.content.SharedPreferences;
 
-import net.simonvt.schematic.annotation.AutoIncrement;
-import net.simonvt.schematic.annotation.ConflictResolutionType;
-import net.simonvt.schematic.annotation.DataType;
-import net.simonvt.schematic.annotation.NotNull;
-import net.simonvt.schematic.annotation.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-/**
- * Uses the Schematic (https://github.com/SimonVT/schematic) library to define the columns in a
- * content provider baked by a database
- */
-
+@Entity
 public class SquawkContract {
 
-    @DataType(DataType.Type.INTEGER)
-    @PrimaryKey(onConflict = ConflictResolutionType.REPLACE)
-    @AutoIncrement
-    public static final String COLUMN_ID = "_id";
+    @PrimaryKey
+    public int messageId;
 
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String COLUMN_AUTHOR = "author";
+    @ColumnInfo
+    public String author;
 
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String COLUMN_AUTHOR_KEY = "authorKey";
+    @ColumnInfo
+    public String authorKey;
 
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String COLUMN_MESSAGE = "message";
+    @ColumnInfo
+    public String message;
 
-    @DataType(DataType.Type.INTEGER)
-    @NotNull
-    public static final String COLUMN_DATE = "date";
+    @ColumnInfo
+    public String date;
+
+    public SquawkContract(
+        int messageId, String author, String authorKey, String message, String date) {
+        this.messageId = messageId;
+        this.author = author;
+        this.authorKey = authorKey;
+        this.message = message;
+        this.date = date;
+    }
 
 
     // Topic keys as matching what is found in the database
@@ -73,7 +70,7 @@ public class SquawkContract {
 
         StringBuilder stringBuilder = new StringBuilder();
         //Automatically add the test account
-        stringBuilder.append(COLUMN_AUTHOR_KEY).append(" IN  ('").append(TEST_ACCOUNT_KEY).append("'");
+        stringBuilder.append("key").append(" IN  ('").append(TEST_ACCOUNT_KEY).append("'");
 
         for (String key : INSTRUCTOR_KEYS) {
             if (preferences.getBoolean(key, false)) {

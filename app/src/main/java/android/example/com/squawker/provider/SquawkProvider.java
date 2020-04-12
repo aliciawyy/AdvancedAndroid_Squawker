@@ -17,10 +17,6 @@ package android.example.com.squawker.provider;
 
 import android.net.Uri;
 
-import net.simonvt.schematic.annotation.ContentProvider;
-import net.simonvt.schematic.annotation.ContentUri;
-import net.simonvt.schematic.annotation.TableEndpoint;
-
 /**
  * Uses the Schematic (https://github.com/SimonVT/schematic) to create a content provider and
  * define

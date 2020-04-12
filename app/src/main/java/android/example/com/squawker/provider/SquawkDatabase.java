@@ -15,20 +15,12 @@
 */
 package android.example.com.squawker.provider;
 
-import net.simonvt.schematic.annotation.Database;
-import net.simonvt.schematic.annotation.Table;
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
 
-/**
- * Uses the Schematic (https://github.com/SimonVT/schematic) library to create a database with one
- * table for messages
- */
+@Database(entities = {SquawkContract.class}, version = SquawkDatabase.VERSION)
+public abstract class SquawkDatabase extends RoomDatabase {
+    public static final int VERSION = 1;
 
-@Database(version = SquawkDatabase.VERSION)
-public class SquawkDatabase {
-
-    public static final int VERSION = 4;
-
-    @Table(SquawkContract.class)
-    public static final String SQUAWK_MESSAGES = "squawk_messages";
-
+    public abstract SquawkContractDao squawkContractDao();
 }
