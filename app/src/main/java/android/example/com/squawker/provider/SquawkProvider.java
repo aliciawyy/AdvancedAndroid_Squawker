@@ -15,29 +15,66 @@
 */
 package android.example.com.squawker.provider;
 
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-/**
- * Uses the Schematic (https://github.com/SimonVT/schematic) to create a content provider and
- * define
- * URIs for the provider
- */
-
-@ContentProvider(
-        authority = SquawkProvider.AUTHORITY,
-        database = SquawkDatabase.class)
-public final class SquawkProvider {
+public final class SquawkProvider extends ContentProvider {
 
     public static final String AUTHORITY = "android.example.com.squawker.provider.provider";
+    public static final Uri CONTENT_URI =
+        Uri.parse("content://" + AUTHORITY + "/" + SquawkContract.TABLE_NAME);
 
+    @Override
+    public boolean onCreate() {
+        return true;
+    }
 
-    @TableEndpoint(table = SquawkDatabase.SQUAWK_MESSAGES)
-    public static class SquawkMessages {
+    @Nullable
+    @Override
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
+        @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+        if (getContext() == null) {
+            throw new IllegalArgumentException("Failed to query row from uri = " + uri);
+        }
+        long messageId = ContentUris.parseId(uri);
+        final Cursor cursor = SquawkRepository.get(getContext())
+            .getSquawkContractsWithCursor(messageId);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
+    }
 
-        @ContentUri(
-                path = "messages",
-                type = "vnd.android.cursor.dir/messages",
-                defaultSort = SquawkContract.COLUMN_DATE + " DESC")
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/messages");
+    @Nullable
+    @Override
+    public String getType(@NonNull Uri uri) {
+        return "vnd.android.cursor.dir/" + AUTHORITY + "." + SquawkContract.TABLE_NAME;
+    }
+
+    @Nullable
+    @Override
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+        if (getContext() == null) {
+            throw new IllegalArgumentException("Failed to insert row from uri = " + uri);
+        }
+        SquawkContract contract = SquawkContract.fromContentValues(values);
+        SquawkRepository.get(getContext()).addSquawkContract(contract);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return ContentUris.withAppendedId(uri, contract.messageId);
+    }
+
+    @Override
+    public int delete(@NonNull Uri uri, @Nullable String selection,
+        @Nullable String[] selectionArgs) {
+        return 0;
+    }
+
+    @Override
+    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection,
+        @Nullable String[] selectionArgs) {
+        return 0;
     }
 }

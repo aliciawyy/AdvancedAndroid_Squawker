@@ -1,5 +1,6 @@
 package android.example.com.squawker.provider;
 
+import android.database.Cursor;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -12,4 +13,7 @@ public interface SquawkContractDao {
 
   @Insert
   void addSquawkContract(SquawkContract squawkContract);
+
+  @Query("SELECT * FROM squawkcontract WHERE messageId = :messageId")
+  Cursor getSquawkContractsWithCursor(long messageId);
 }

@@ -1,6 +1,7 @@
 package android.example.com.squawker.provider;
 
 import android.content.Context;
+import android.database.Cursor;
 import androidx.room.Room;
 import java.util.List;
 
@@ -30,4 +31,9 @@ public class SquawkRepository {
   public void addSquawkContract(SquawkContract squawkContract) {
     squawkContractDao.addSquawkContract(squawkContract);
   }
+
+  public Cursor getSquawkContractsWithCursor(long messageId) {
+    return squawkContractDao.getSquawkContractsWithCursor(messageId);
+  }
+
 }

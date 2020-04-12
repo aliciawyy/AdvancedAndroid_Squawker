@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.example.com.squawker.MainActivity;
 import android.example.com.squawker.R;
-import android.example.com.squawker.provider.SquawkContract;
 import android.example.com.squawker.provider.SquawkProvider;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -41,11 +40,6 @@ import java.util.Map;
  * depending on type of message
  */
 public class SquawkFirebaseMessageService extends FirebaseMessagingService {
-
-    private static final String JSON_KEY_AUTHOR = SquawkContract.COLUMN_AUTHOR;
-    private static final String JSON_KEY_AUTHOR_KEY = SquawkContract.COLUMN_AUTHOR_KEY;
-    private static final String JSON_KEY_MESSAGE = SquawkContract.COLUMN_MESSAGE;
-    private static final String JSON_KEY_DATE = SquawkContract.COLUMN_DATE;
 
     private static final int NOTIFICATION_MAX_CHARACTERS = 30;
     private static String LOG_TAG = SquawkFirebaseMessageService.class.getSimpleName();
@@ -103,11 +97,11 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
             @Override
             protected Void doInBackground(Void... voids) {
                 ContentValues newMessage = new ContentValues();
-                newMessage.put(SquawkContract.COLUMN_AUTHOR, data.get(JSON_KEY_AUTHOR));
-                newMessage.put(SquawkContract.COLUMN_MESSAGE, data.get(JSON_KEY_MESSAGE).trim());
-                newMessage.put(SquawkContract.COLUMN_DATE, data.get(JSON_KEY_DATE));
-                newMessage.put(SquawkContract.COLUMN_AUTHOR_KEY, data.get(JSON_KEY_AUTHOR_KEY));
-                getContentResolver().insert(SquawkProvider.SquawkMessages.CONTENT_URI, newMessage);
+                newMessage.put("author", data.get("author"));
+                newMessage.put("message", data.get("message").trim());
+                newMessage.put("date", data.get("date"));
+                newMessage.put("authorKey", data.get("authorKey"));
+                getContentResolver().insert(SquawkProvider.CONTENT_URI, newMessage);
                 return null;
             }
         };
@@ -128,8 +122,8 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        String author = data.get(JSON_KEY_AUTHOR);
-        String message = data.get(JSON_KEY_MESSAGE);
+        String author = data.get("author");
+        String message = data.get("message");
 
         // If the message is longer than the max number of characters we want in our
         // notification, truncate it and add the unicode character for ellipsis

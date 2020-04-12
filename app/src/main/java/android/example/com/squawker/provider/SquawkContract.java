@@ -15,6 +15,7 @@
 */
 package android.example.com.squawker.provider;
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 
 import androidx.room.ColumnInfo;
@@ -24,8 +25,13 @@ import androidx.room.PrimaryKey;
 @Entity
 public class SquawkContract {
 
+    public static final String TABLE_NAME = "squawkcontract";
+    public static final String[] DEFAULT_PROJECTION = {
+        "messageId", "author", "authorKey", "message", "date"
+    };
+
     @PrimaryKey
-    public int messageId;
+    public long messageId;
 
     @ColumnInfo
     public String author;
@@ -40,12 +46,21 @@ public class SquawkContract {
     public String date;
 
     public SquawkContract(
-        int messageId, String author, String authorKey, String message, String date) {
+        long messageId, String author, String authorKey, String message, String date) {
         this.messageId = messageId;
         this.author = author;
         this.authorKey = authorKey;
         this.message = message;
         this.date = date;
+    }
+
+    public static SquawkContract fromContentValues(ContentValues values) {
+        long messageId = values.getAsLong("messageId");
+        String author = values.getAsString("author");
+        String authorKey = values.getAsString("authorKey");
+        String message = values.getAsString("message");
+        String date = values.getAsString("date");
+        return new SquawkContract(messageId, author, authorKey, message, date);
     }
 
 
@@ -70,7 +85,7 @@ public class SquawkContract {
 
         StringBuilder stringBuilder = new StringBuilder();
         //Automatically add the test account
-        stringBuilder.append("key").append(" IN  ('").append(TEST_ACCOUNT_KEY).append("'");
+        stringBuilder.append("authorKey").append(" IN  ('").append(TEST_ACCOUNT_KEY).append("'");
 
         for (String key : INSTRUCTOR_KEYS) {
             if (preferences.getBoolean(key, false)) {

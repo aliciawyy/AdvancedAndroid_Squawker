@@ -16,6 +16,7 @@
 
 package android.example.com.squawker;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.example.com.squawker.following.FollowingPreferenceActivity;
@@ -29,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -36,7 +38,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-public class MainActivity extends AppCompatActivity implements {
+public class MainActivity extends AppCompatActivity
+    implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID_MESSAGES = 0;
@@ -44,13 +47,6 @@ public class MainActivity extends AppCompatActivity implements {
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
     SquawkAdapter mAdapter;
-
-    static final String[] MESSAGES_PROJECTION = {
-            SquawkContract.COLUMN_AUTHOR,
-            SquawkContract.COLUMN_MESSAGE,
-            SquawkContract.COLUMN_DATE,
-            SquawkContract.COLUMN_AUTHOR_KEY
-    };
 
     static final int COL_NUM_AUTHOR = 0;
     static final int COL_NUM_MESSAGE = 1;
@@ -122,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements {
         // This method generates a selection off of only the current followers
         String selection = SquawkContract.createSelectionForCurrentFollowers(
                 PreferenceManager.getDefaultSharedPreferences(this));
-        Log.d(LOG_TAG, "Selection is " + selection);
-        return new CursorLoader(this, SquawkProvider.SquawkMessages.CONTENT_URI,
-                MESSAGES_PROJECTION, selection, null, SquawkContract.COLUMN_DATE + " DESC");
+        Log.d(LOG_TAG, "Selection = " + selection);
+        return new CursorLoader(this, ContentUris.withAppendedId(SquawkProvider.CONTENT_URI, 1),
+                SquawkContract.DEFAULT_PROJECTION, null, null, "date");
     }
 
     @Override
