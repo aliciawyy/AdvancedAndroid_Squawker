@@ -117,15 +117,14 @@ public class MainActivity extends AppCompatActivity
     /**
      * Loader callbacks
      */
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // This method generates a selection off of only the current followers
-        String selection = SquawkContract.createSelectionForCurrentFollowers(
+        String[] selectionArgs = SquawkContract.createSelectionForCurrentFollowers(
                 PreferenceManager.getDefaultSharedPreferences(this));
-        Log.d(TAG, "Selection = " + selection);
+        Log.d(TAG, "SelectionArgs = " + selectionArgs);
         return new CursorLoader(this, SquawkProvider.CONTENT_URI,
-                SquawkContract.DEFAULT_PROJECTION, selection, null, "date");
+                SquawkContract.DEFAULT_PROJECTION, null, selectionArgs, "date DESC");
     }
 
     @Override

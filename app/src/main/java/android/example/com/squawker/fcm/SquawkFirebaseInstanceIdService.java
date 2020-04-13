@@ -25,7 +25,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
  */
 public class SquawkFirebaseInstanceIdService extends FirebaseMessagingService {
 
-    private static String TAG = "SquawkFirebaseInstanceIdService";
+    private final static String TAG = "SquawkFCMIdService";
 
     @Override
     public void onNewToken(@NonNull String s) {

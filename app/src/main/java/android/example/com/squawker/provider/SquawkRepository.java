@@ -2,6 +2,8 @@ package android.example.com.squawker.provider;
 
 import android.content.Context;
 import android.database.Cursor;
+import androidx.annotation.NonNull;
+import androidx.loader.content.CursorLoader;
 import androidx.room.Room;
 import java.util.List;
 
@@ -26,6 +28,10 @@ public class SquawkRepository {
 
   public Cursor getAllWithCursor() {
     return squawkContractDao.getAllWithCursor();
+  }
+
+  public Cursor getAuthorsWithCursor(String[] authorKeys) {
+    return squawkContractDao.getByAuthorsWithCursor(authorKeys);
   }
 
   public void addSquawkContract(SquawkContract squawkContract) {

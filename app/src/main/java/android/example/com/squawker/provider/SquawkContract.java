@@ -21,6 +21,9 @@ import android.content.SharedPreferences;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class SquawkContract {
@@ -55,14 +58,13 @@ public class SquawkContract {
     }
 
     public static SquawkContract fromContentValues(ContentValues values) {
-        long messageId = values.getAsLong("messageId");
         String author = values.getAsString("author");
         String authorKey = values.getAsString("authorKey");
         String message = values.getAsString("message");
         String date = values.getAsString("date");
-        return new SquawkContract(messageId, author, authorKey, message, date);
+        return new SquawkContract(
+            UUID.randomUUID().getMostSignificantBits(), author, authorKey, message, date);
     }
-
 
     // Topic keys as matching what is found in the database
     public static final String ASSER_KEY = "key_asser";
@@ -72,7 +74,6 @@ public class SquawkContract {
     public static final String NIKITA_KEY = "key_nikita";
     public static final String TEST_ACCOUNT_KEY = "key_test";
 
-
     private static final String[] INSTRUCTOR_KEYS = {
             ASSER_KEY, CEZANNE_KEY, JLIN_KEY, LYLA_KEY, NIKITA_KEY
     };
@@ -81,19 +82,14 @@ public class SquawkContract {
      * Creates a SQLite SELECTION parameter that filters just the rows for the authors you are
      * currently following.
      */
-    public static String createSelectionForCurrentFollowers(SharedPreferences preferences) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        //Automatically add the test account
-        stringBuilder.append("authorKey").append(" IN  ('").append(TEST_ACCOUNT_KEY).append("'");
-
+    public static String[] createSelectionForCurrentFollowers(SharedPreferences preferences) {
+        List<String> keys = new ArrayList<>();
+        keys.add(TEST_ACCOUNT_KEY);
         for (String key : INSTRUCTOR_KEYS) {
             if (preferences.getBoolean(key, false)) {
-                stringBuilder.append(",");
-                stringBuilder.append("'").append(key).append("'");
+                keys.add(key);
             }
         }
-        stringBuilder.append(")");
-        return stringBuilder.toString();
+        return keys.toArray(new String[keys.size()]);
     }
 }

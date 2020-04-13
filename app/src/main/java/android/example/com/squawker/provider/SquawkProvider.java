@@ -43,7 +43,7 @@ public final class SquawkProvider extends ContentProvider {
             throw new IllegalArgumentException("Failed to query row from uri = " + uri);
         }
         Log.d(TAG, "query uri = " + uri);
-        final Cursor cursor = SquawkRepository.get(getContext()).getAllWithCursor();
+        final Cursor cursor = SquawkRepository.get(getContext()).getAuthorsWithCursor(selectionArgs);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
