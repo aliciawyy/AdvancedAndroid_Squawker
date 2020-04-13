@@ -42,7 +42,7 @@ import java.util.Map;
 public class SquawkFirebaseMessageService extends FirebaseMessagingService {
 
     private static final int NOTIFICATION_MAX_CHARACTERS = 30;
-    private static String LOG_TAG = SquawkFirebaseMessageService.class.getSimpleName();
+    private static String TAG = SquawkFirebaseMessageService.class.getSimpleName();
 
     /**
      * Called when message is received.
@@ -68,14 +68,14 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
         // The Squawk server always sends just *data* messages, meaning that onMessageReceived when
         // the app is both in the foreground AND the background
 
-        Log.d(LOG_TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
 
         Map<String, String> data = remoteMessage.getData();
 
         if (data.size() > 0) {
-            Log.d(LOG_TAG, "Message data payload: " + data);
+            Log.d(TAG, "Message data payload: " + data);
 
             // Send a notification that you got a new message
             sendNotification(data);

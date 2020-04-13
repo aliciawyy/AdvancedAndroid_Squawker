@@ -31,7 +31,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 public class FollowingPreferenceFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private final static String LOG_TAG = FollowingPreferenceFragment.class.getSimpleName();
+    private final static String TAG = FollowingPreferenceFragment.class.getSimpleName();
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -50,21 +50,18 @@ public class FollowingPreferenceFragment extends PreferenceFragmentCompat implem
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         Preference preference = findPreference(key);
-        if (preference != null && preference instanceof SwitchPreferenceCompat) {
+        if (preference instanceof SwitchPreferenceCompat) {
             // Get the current state of the switch preference
             boolean isOn = sharedPreferences.getBoolean(key, false);
             if (isOn) {
                 // The preference key matches the following key for the associated instructor in
                 // FCM. For example, the key for Lyla is key_lyla (as seen in
                 // following_squawker.xml). The topic for Lyla's messages is /topics/key_lyla
-
-                // Subscribe
                 FirebaseMessaging.getInstance().subscribeToTopic(key);
-                Log.d(LOG_TAG, "Subscribing to " + key);
+                Log.d(TAG, "Subscribing to " + key);
             } else {
-                // Un-subscribe
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(key);
-                Log.d(LOG_TAG, "Un-subscribing to " + key);
+                Log.d(TAG, "Un-subscribing to " + key);
             }
         }
     }

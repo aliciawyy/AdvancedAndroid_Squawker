@@ -4,12 +4,11 @@ import android.database.Cursor;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-import java.util.List;
 
 @Dao
 public interface SquawkContractDao {
   @Query("SELECT * FROM squawkcontract")
-  List<SquawkContract> getAll();
+  Cursor getAllWithCursor();
 
   @Insert
   void addSquawkContract(SquawkContract squawkContract);

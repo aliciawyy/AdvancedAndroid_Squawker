@@ -41,17 +41,17 @@ import com.google.firebase.iid.FirebaseInstanceId;
 public class MainActivity extends AppCompatActivity
     implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = "MainActivity";
     private static final int LOADER_ID_MESSAGES = 0;
 
     RecyclerView mRecyclerView;
     LinearLayoutManager mLayoutManager;
     SquawkAdapter mAdapter;
 
-    static final int COL_NUM_AUTHOR = 0;
-    static final int COL_NUM_MESSAGE = 1;
-    static final int COL_NUM_DATE = 2;
-    static final int COL_NUM_AUTHOR_KEY = 3;
+    static final int COL_NUM_AUTHOR = 1;
+    static final int COL_NUM_MESSAGE = 3;
+    static final int COL_NUM_DATE = 4;
+    static final int COL_NUM_AUTHOR_KEY = 2;
 
 
     @Override
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         // Get token from the ID Service you created and show it in a log
         String token = FirebaseInstanceId.getInstance().getToken();
         String msg = getString(R.string.message_token_format, token);
-        Log.d(LOG_TAG, msg);
+        Log.d(TAG, msg);
 
     }
 
@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity
         // This method generates a selection off of only the current followers
         String selection = SquawkContract.createSelectionForCurrentFollowers(
                 PreferenceManager.getDefaultSharedPreferences(this));
-        Log.d(LOG_TAG, "Selection = " + selection);
-        return new CursorLoader(this, ContentUris.withAppendedId(SquawkProvider.CONTENT_URI, 1),
-                SquawkContract.DEFAULT_PROJECTION, null, null, "date");
+        Log.d(TAG, "Selection = " + selection);
+        return new CursorLoader(this, SquawkProvider.CONTENT_URI,
+                SquawkContract.DEFAULT_PROJECTION, selection, null, "date");
     }
 
     @Override

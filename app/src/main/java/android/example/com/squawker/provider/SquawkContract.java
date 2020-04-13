@@ -73,7 +73,7 @@ public class SquawkContract {
     public static final String TEST_ACCOUNT_KEY = "key_test";
 
 
-    public static final String[] INSTRUCTOR_KEYS = {
+    private static final String[] INSTRUCTOR_KEYS = {
             ASSER_KEY, CEZANNE_KEY, JLIN_KEY, LYLA_KEY, NIKITA_KEY
     };
 

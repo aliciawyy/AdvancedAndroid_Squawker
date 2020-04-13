@@ -24,8 +24,8 @@ public class SquawkRepository {
     return sInstance;
   }
 
-  public List<SquawkContract> getAll() {
-    return squawkContractDao.getAll();
+  public Cursor getAllWithCursor() {
+    return squawkContractDao.getAllWithCursor();
   }
 
   public void addSquawkContract(SquawkContract squawkContract) {

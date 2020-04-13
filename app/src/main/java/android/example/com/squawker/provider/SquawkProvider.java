@@ -20,11 +20,12 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public final class SquawkProvider extends ContentProvider {
-
+    private static final String TAG = "SquawkProvider";
     public static final String AUTHORITY = "android.example.com.squawker.provider.provider";
     public static final Uri CONTENT_URI =
         Uri.parse("content://" + AUTHORITY + "/" + SquawkContract.TABLE_NAME);
@@ -41,9 +42,8 @@ public final class SquawkProvider extends ContentProvider {
         if (getContext() == null) {
             throw new IllegalArgumentException("Failed to query row from uri = " + uri);
         }
-        long messageId = ContentUris.parseId(uri);
-        final Cursor cursor = SquawkRepository.get(getContext())
-            .getSquawkContractsWithCursor(messageId);
+        Log.d(TAG, "query uri = " + uri);
+        final Cursor cursor = SquawkRepository.get(getContext()).getAllWithCursor();
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
