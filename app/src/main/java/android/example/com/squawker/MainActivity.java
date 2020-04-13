@@ -87,6 +87,11 @@ public class MainActivity extends AppCompatActivity
         String msg = getString(R.string.message_token_format, token);
         Log.d(TAG, msg);
 
+        Bundle extra = getIntent().getExtras();
+        if (extra != null && extra.containsKey("testKey")) {
+            Log.d(TAG, "testKey = " + extra.getString("testKey"));
+        }
+
     }
 
     @Override

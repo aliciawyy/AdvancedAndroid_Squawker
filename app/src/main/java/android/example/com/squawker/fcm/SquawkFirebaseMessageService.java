@@ -68,7 +68,9 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
         // The Squawk server always sends just *data* messages, meaning that onMessageReceived when
         // the app is both in the foreground AND the background
 
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "From: " + remoteMessage.getFrom() +
+            ", data = " + remoteMessage.getData() +
+            ", remoteMessage = " + remoteMessage);
 
         // Check if message contains a data payload.
 
@@ -80,7 +82,8 @@ public class SquawkFirebaseMessageService extends FirebaseMessagingService {
             // Send a notification that you got a new message
             sendNotification(data);
             insertSquawk(data);
-
+        } else {
+            Log.d(TAG, "Empty message data.");
         }
     }
 
